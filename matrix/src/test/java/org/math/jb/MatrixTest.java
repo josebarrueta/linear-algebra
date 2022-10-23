@@ -12,7 +12,7 @@ public class MatrixTest {
         Matrix<Integer> result = matrix.transpose();
 
         Integer[][] expected = {{1, 4, 7, 10}, {2, 5, 8, 11}, {3, 6, 9, 12}};
-        assertArray(new Matrix<>(expected), result);
+        assertMatrixIsEqual(new Matrix<>(expected), result);
     }
 
     @Test
@@ -25,7 +25,7 @@ public class MatrixTest {
         Matrix<Integer> matrixTwo = new Matrix<>(mTwoValues);
 
         Integer[][] expected = {{12, 14, 26}, {18, 20, 22}, {24, 26, 28}, {30, 32, 34}};
-        assertArray(new Matrix<>(expected), matrixOne.add(matrixTwo));
+        assertMatrixIsEqual(new Matrix<>(expected), matrixOne.add(matrixTwo));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class MatrixTest {
         Matrix<Integer> matrixTwo = new Matrix<>(mTwoValues);
 
         Integer[][] expected = {{-10, -10, -20}, {2, 4, 3}, {4, 1, 7}, {5, 4, 3}};
-        assertArray(new Matrix<>(expected), matrixOne.subtract(matrixTwo));
+        assertMatrixIsEqual(new Matrix<>(expected), matrixOne.subtract(matrixTwo));
     }
 
     @Test
@@ -52,10 +52,58 @@ public class MatrixTest {
 
         Integer[][] expected = {{5, 4, 3}, {8, 9, 5}, {6, 5, 3}, {11, 9, 6}};
 
-        assertArray(new Matrix<>(expected), matrixOne.multiply(matrixTwo));
+        assertMatrixIsEqual(new Matrix<>(expected), matrixOne.multiply(matrixTwo));
     }
 
-    private void assertArray(Matrix<Integer> expected, Matrix<Integer> actual) {
+    @Test
+    public void testIsSymmetric() {
+        Integer[][] mValues = {{1, 2, 3}, {2, 2, 4}, {3, 4, 3}};
+
+        Matrix<Integer> matrixOne = new Matrix<>(mValues);
+
+        if (!matrixOne.isSymmetric()) {
+            throw new AssertionError("isSymmetric call failed, expected=true, actual=false");
+        }
+    }
+
+    @Test
+    public void testNotSymmetric() {
+        Integer[][] mValues = {{1, 2, 3}, {4, 5, 9}, {1, 8, 3}};
+
+        Matrix<Integer> matrixOne = new Matrix<>(mValues);
+
+        if (matrixOne.isSymmetric()) {
+            throw new AssertionError("isSymmetric call failed, expected=false, actual=true");
+        }
+    }
+
+    @Test
+    public void testEquals() {
+        Integer[][] mOneValues = {{1, 2, 3}, {2, 2, 4}, {3, 4, 3}};
+        Integer[][] mTwoValues = {{1, 2, 3}, {2, 2, 4}, {3, 4, 3}};
+
+        Matrix<Integer> matrixOne = new Matrix<>(mOneValues);
+        Matrix<Integer> matrixTwo = new Matrix<>(mTwoValues);
+
+        if (!matrixOne.equals(matrixTwo)) {
+            throw new AssertionError("equals call failed, expected=true, actual=false");
+        }
+    }
+
+    @Test
+    public void testNotEquals() {
+        Integer[][] mOneValues = {{1, 2, 3}, {2, null, 4}, {3, 4, 3}};
+        Integer[][] mTwoValues = {{1, 2, 3}, {2, 2, 4}, {3, 4, 3}};
+
+        Matrix<Integer> matrixOne = new Matrix<>(mOneValues);
+        Matrix<Integer> matrixTwo = new Matrix<>(mTwoValues);
+
+        if (matrixOne.equals(matrixTwo)) {
+            throw new AssertionError("equals call failed, expected=false, actual=true");
+        }
+    }
+
+    private void assertMatrixIsEqual(Matrix<Integer> expected, Matrix<Integer> actual) {
         if (expected.getRowSize() != actual.getRowSize()) {
             throw new AssertionError(String.format("Invalid number of rows expected=[%d], actual=[%d]", expected.getRowSize(), actual.getRowSize()));
         }

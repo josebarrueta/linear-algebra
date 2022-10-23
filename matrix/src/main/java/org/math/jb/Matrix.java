@@ -19,6 +19,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Array;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class Matrix<T extends Number> {
@@ -190,7 +192,36 @@ public class Matrix<T extends Number> {
         return transpose;
     }
 
-//    public void print() {
+    public boolean isSymmetric() {
+        return this.equals(this.transpose());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRowSize(), getColumnSize());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Matrix<?> other)) {
+            return false;
+        }
+
+        if (this.getRowSize() != other.getRowSize() || this.getColumnSize() != other.getColumnSize()) {
+            return false;
+        }
+
+        for (int i = 1; i <= this.getRowSize(); i++) {
+            for (int j = 1; j <= this.getColumnSize(); j++) {
+                if (!Objects.equals(this.getValue(i, j), other.getValue(i, j))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    //    public void print() {
 //        for (T[] row : innerArray) {
 //            for (int j = 0; j < innerArray[0].length; j++) {
 //                if (j == (innerArray[0].length - 1)) {
